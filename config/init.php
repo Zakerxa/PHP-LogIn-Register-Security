@@ -1,7 +1,7 @@
 <?php
 header('Content-Type: text/html; charset=utf-8');
 
-include "dataBase.php";
+include "database.php";
 include "account.php";
 
 session_start();
@@ -10,7 +10,8 @@ date_default_timezone_set("Asia/Yangon");
 
 // Initialize Class
 $dbCon   = new Database();
-$account = new Account($dbCon->connection());
+$pdo     = $dbCon->connection();
+$account = new Account($pdo);
 
 // Create Default Time
 $diffWithGMT = 6 * 60 * 60 + 30 * 60; //converting time difference to seconds.

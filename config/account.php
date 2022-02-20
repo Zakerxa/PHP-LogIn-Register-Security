@@ -18,14 +18,14 @@ class Account
     public function Register($name, $pass, $mail, $date, $CSRF, $formCSRF)
     {
         try {
-            $this->name = trim($name);
+            $this->name = escape(trim($name));
+            $this->mail = escape(trim($mail));
             $this->pass = trim($pass);
-            $this->mail = trim($mail);
             $this->date = trim($date);
 
             // Check User Information Not To Empty
             if ((empty($this->name)) || (empty($this->pass)) || (empty($this->mail))) {
-                return ['ErrorMsg' => '<p style="color:yellow;"> Fill your informations...</p>'];
+                return ['ErrorMsg' => '<p style="color:#f00;"> Fill your informations . . .</p>'];
             }
 
             // Check User Name is valid or Not
@@ -36,7 +36,9 @@ class Account
             // Check CSRF Token If Developer Use
             if (isset($CSRF)) {
                 if (!hash_equals($CSRF, $formCSRF)) {
-                    return ['ErrorMsg' => '<p style="color:#f00;margin-bottom:4px;">Invalid CSRF </p><small class="text-muted"> The CSRF token is invalid or missing.Please try to resubmit the form.</small>'];
+                    return ['ErrorMsg' => '<p style="color:#f00;margin-bottom:3px;">Invalid CSRF 
+                    <small style="opacity:0.6;margin-bottom:2px;color:#222;display:block;"> Please try to resubmit the form.</small>
+                   </p>'];
                 }
             }
 
@@ -53,7 +55,11 @@ class Account
 
             $this->hash_pass = password_hash($this->pass, PASSWORD_DEFAULT);
 
-            $stmtRegister = $this->pdo->prepare("INSERT INTO users (username,password,email,confirm,created_date) VALUES(:name,:pass,:mail,0,:date)");
+            $token    = 'QWERTYUIOPASDFGHJKLZXCVBNM123456789';
+            $token    = str_shuffle($token);
+            $token    = substr($token, 0, 25);
+
+            $stmtRegister = $this->pdo->prepare("INSERT INTO users (username,password,email,token,created_date) VALUES(:name,:pass,:mail,'$token',:date)");
             //BIND VALUES
             $stmtRegister->bindValue(':name', htmlspecialchars($this->name), PDO::PARAM_STR);
             $stmtRegister->bindValue(':mail', strtolower($this->mail));
@@ -66,6 +72,56 @@ class Account
                 header("location:success.php");
             } else {
                 return ['ErrorMsg' => '<p style="color:#f00;"> Something Went Wrong!</p>'];
+            }
+        } catch (\Throwable $th) {
+            echo $th;
+        }
+    }
+
+    public function LogIn($pass, $mail, $date, $CSRF, $formCSRF)
+    {
+        try {
+            $this->pass = trim($pass);
+            $this->mail = trim($mail);
+            $this->date = trim($date);
+
+            // Check User Information Not To Empty
+            if ((empty($this->pass)) || (empty($this->mail))) {
+                return ['ErrorMsg' => '<p style="color:#f00;"> Fill your informations . . .</p>'];
+            }
+
+            // Check CSRF Token If Developer Use
+            if (isset($CSRF)) {
+                if (!hash_equals($CSRF, $formCSRF)) {
+                    return ['ErrorMsg' => '<p style="color:#f00;margin-bottom:3px;">Invalid CSRF 
+                     <small style="opacity:0.6;margin-bottom:2px;color:#222;display:block;"> Please try to resubmit the form.</small>
+                    </p>'];
+                }
+            }
+
+            // Check User Mail is Valid or Not
+            if (filter_var($this->mail, FILTER_VALIDATE_EMAIL)) {
+                $checkMail = $this->pdo->prepare("SELECT * FROM users WHERE email = ?");
+                $checkMail->execute([$this->mail]);
+                if ($checkMail->rowCount() === 1) {
+                    // Get user row if email is exist.
+                    $row = $checkMail->fetch(PDO::FETCH_ASSOC);
+                    // Check password is ture or not
+                    $match_pass = password_verify($this->pass, $row['password']);
+                    
+                    if($match_pass){
+                      setcookie('auth',$row['username'],time()+3600,'/');
+                      setcookie('token',$row['token'],time()+3600,'/');
+                      unset($_SESSION['CSRF']);
+                      header("location:index.php");
+                    }else{
+                        return ['ErrorMsg' => '<p style="color:#f00;"> Incorrect Password !</p>'];
+                    }
+                }else{
+                    return ['ErrorMsg' => '<p style="color:#f00;"> Your mail doesn\'t register.</p>'];
+                }
+            } else {
+                return ['ErrorMsg' => '<p style="color:#f00;"> Invalid Email format.</p>'];
             }
         } catch (\Throwable $th) {
             echo $th;
