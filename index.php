@@ -1,15 +1,11 @@
 <?php
 
 include "config/init.php";
-// Usage
-createCSRF();
+
 $CSRF = hash_hmac('sha256', 'registerCSRF', $_SESSION['CSRF']);
 $err = '';
-if (isset($_POST['register'])) {
-    $email    = $_POST['email'];
-    $password = $_POST['password'];
-    $formCSRF = $_POST['CSRF'];
-    $result = $account->LogIn($password, $email, $ygntime, $CSRF, $formCSRF);
+if (isset($_POST['login'])) {
+    $result = $account->LogIn($_POST['password'], $_POST['email'], $ygntime, $CSRF, $_POST['CSRF']);
     if (isset($result['ErrorMsg'])) {
         $err =  $result['ErrorMsg'];
     }
@@ -65,7 +61,7 @@ if (isset($_COOKIE['auth'])) {
 
                         <div class="col-11 pb-3 text-center">
                             <h2>LogIn</h2>
-                            <img src="profile.png" width="55%" alt="">
+                            <img src="photo/profile.png" width="50%" alt="">
                         </div>
 
                         <div class="col-11">
@@ -86,7 +82,7 @@ if (isset($_COOKIE['auth'])) {
                                     <label for="password">Password</label>
                                 </div>
                                 <div class="pt-4 pb-3">
-                                    <button class="btn btn-dark w-100 p-2" name="register">LogIn</button>
+                                    <button class="btn btn-dark w-100 p-2" name="login">LogIn</button>
                                 </div>
 
                                 <div class="text-end">Don't have an acoount? <a href="register.php" style="text-decoration: none;">Register</a></div>
@@ -100,9 +96,7 @@ if (isset($_COOKIE['auth'])) {
         <?php } ?>
     </div>
     <script>
-        if (window.history.replaceState) {
-            window.history.replaceState(null, null, window.location.href);
-        }
+        if (window.history.replaceState)  window.history.replaceState(null, null, window.location.href);
     </script>
 </body>
 

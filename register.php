@@ -1,16 +1,11 @@
 <?php
 
 include "config/init.php";
-// Usage
-createCSRF();
+
 $CSRF = hash_hmac('sha256', 'registerCSRF', $_SESSION['CSRF']);
 $err = '';
 if (isset($_POST['register'])) {
-    $username = $_POST['username'];
-    $email    = $_POST['email'];
-    $password = $_POST['password'];
-    $formCSRF = $_POST['CSRF'];
-    $result = $account->Register($username, $password, $email, $ygntime, $CSRF, $formCSRF);
+    $result = $account->Register($_POST['username'], $_POST['password'], $_POST['email'], $ygntime, $CSRF, $_POST['CSRF']);
     if (isset($result['ErrorMsg'])) {
         $err =  $result['ErrorMsg'];
     }
@@ -41,7 +36,7 @@ if (isset($_POST['register'])) {
 
                         <div class="col-11 pb-3 text-center">
                             <h2>Register</h2>
-                            <img src="profile.png" width="55%" alt="">
+                            <img src="photo/profile.png" width="50%" alt="">
                         </div>
 
                         <div class="col-11">
@@ -80,9 +75,7 @@ if (isset($_POST['register'])) {
         <?php } ?>
     </div>
     <script>
-        if (window.history.replaceState) {
-            window.history.replaceState(null, null, window.location.href);
-        }
+        if (window.history.replaceState)  window.history.replaceState(null, null, window.location.href);
     </script>
 </body>
 

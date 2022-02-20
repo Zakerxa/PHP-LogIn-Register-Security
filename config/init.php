@@ -1,12 +1,11 @@
 <?php
 header('Content-Type: text/html; charset=utf-8');
+date_default_timezone_set("Asia/Yangon");
 
 include "database.php";
 include "account.php";
 
 session_start();
-// Set To LocalTimeZone
-date_default_timezone_set("Asia/Yangon");
 
 // Initialize Class
 $dbCon   = new Database();
@@ -23,13 +22,10 @@ function escape($html){
     return htmlspecialchars($html, ENT_QUOTES | ENT_SUBSTITUTE, "UTF-8");
 }
 
-// Create CSRF TOKEN
-function createCSRF(){
-    if (empty($_SESSION['CSRF'])) {
-        if (function_exists('random_bytes')) {
-            $_SESSION['CSRF'] = bin2hex(random_bytes(32));
-        } else {
-            $_SESSION['CSRF'] = bin2hex(openssl_random_pseudo_bytes(32));
-        }
+if (empty($_SESSION['CSRF'])) {
+    if (function_exists('random_bytes')) {
+        $_SESSION['CSRF'] = bin2hex(random_bytes(32));
+    } else {
+        $_SESSION['CSRF'] = bin2hex(openssl_random_pseudo_bytes(32));
     }
 }

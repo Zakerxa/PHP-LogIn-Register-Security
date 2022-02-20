@@ -69,7 +69,7 @@ class Account
             $insertUser = $stmtRegister->execute();
             if ($insertUser) {
                 unset($_SESSION['CSRF']);
-                header("location:success.php");
+                header("location:redirect/success.html");
             } else {
                 return ['ErrorMsg' => '<p style="color:#f00;"> Something Went Wrong!</p>'];
             }
