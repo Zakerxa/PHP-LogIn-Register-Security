@@ -2,6 +2,7 @@
 
 <p>Hello Everyone! My name is Zin Min Htet. </p>
 <p>I will show you how to create php LogIn-Register with Security.</p>
+<p>This Login-Register form prevent you from attacking CSRF, XSS, SQL Injection & other..</p>
 <p>There is also simple Installation & Usage for beginner.</p>
 
 <br>
@@ -16,8 +17,9 @@ CREATE TABLE users (
     id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) NOT NULL,
     password VARCHAR(100) NOT NULL,
-    email VARCHAR(50),
-    token VARCHAR(30),
+    salt VARCHAR(10) NOT NULL,
+    email VARCHAR(50) NOT NULL,
+    token VARCHAR(30) NOT NULL,
     created_date VARCHAR(50) NOT NULL
 )
 ```
@@ -88,6 +90,16 @@ URL : [http://account.zakerxa.com](http://account.zakerxa.com)
 
 <br>
 
-## Customize
+# Customize
 
 If you wanna customize more features learn from [account.php](https://github.com/Zakerxa/PHP-LogIn-Register-Security/blob/main/config/account.php)
+
+<br>
+
+# Contact Me
+Facebook : [ [Profile](https://www.facebook.com/profile.php?id=100016329211576) | [Messenger](https://www.messenger.com/t/100016329211576) ]
+
+Phone : [+959777637858](tel:+959777637858)
+
+Email : [zakexa@gmail.com](zakerxa@gmail.com)
+
