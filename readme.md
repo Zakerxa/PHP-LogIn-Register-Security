@@ -83,6 +83,11 @@ if (isset($result['ErrorMsg'])) {
 
 <br>
 
+# Live Demo
+URL : [http://account.zakerxa.com](http://account.zakerxa.com)
+
+<br>
+
 ## Customize
 
 If you wanna customize more features learn from [account.php](https://github.com/Zakerxa/PHP-LogIn-Register-Security/blob/main/config/account.php)

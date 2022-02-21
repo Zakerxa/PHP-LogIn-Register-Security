@@ -26,8 +26,12 @@ if (isset($_COOKIE['auth'])) {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="og:title" content="PHP Login-Register With Security" />
+    <meta property="og:description" content="This Login-Register form is prevented CSRF,XSS Attack & SQL Injection." />
+    <meta property="og:image" content="photo/1_zNRoyQ92EUrW8EbaNXT6vQ.png" />
+    <meta property="og:image:type" content="image/png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <title>LogIn-Out</title>
+    <title>LogIn-Register</title>
 </head>
 
 <body>
@@ -39,13 +43,13 @@ if (isset($_COOKIE['auth'])) {
                     <h1 class="p-1">Congratulation!</h1>
                     <p class="p-2">Now you are Login User.Here is your Informations</p>
                     <div class="p-1">
-                       
+
                         <div class="fw-bold text-muted bg-light p-2 pt-3">
                             <p class="p-1">Name : <?= $user->username ?></p>
                             <p class="p-1">Email : <?= $user->email ?></p>
                             <p class="p-1">Token : <?= $user->token ?></p>
                             <p class="p-1">Date : <?= $user->created_date ?></p>
-                            
+
                         </div>
                         <span class="text-muted p-2 d-block mt-3">Login user only can see this message.</span>
                         <div class="text-end pt-3">
@@ -96,7 +100,7 @@ if (isset($_COOKIE['auth'])) {
         <?php } ?>
     </div>
     <script>
-        if (window.history.replaceState)  window.history.replaceState(null, null, window.location.href);
+        if (window.history.replaceState) window.history.replaceState(null, null, window.location.href);
     </script>
 </body>
 

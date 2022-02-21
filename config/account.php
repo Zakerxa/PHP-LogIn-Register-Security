@@ -53,13 +53,14 @@ class Account
                 return ['ErrorMsg' => '<p style="color:#f00;"> Invalid Email format.</p>'];
             }
 
-            $this->hash_pass = password_hash($this->pass, PASSWORD_DEFAULT);
-
+            
             $token    = 'QWERTYUIOPASDFGHJKLZXCVBNM123456789';
             $token    = str_shuffle($token);
             $token    = substr($token, 0, 25);
+            $salt     = substr(str_shuffle($token), 0, 10);
+            $this->hash_pass = password_hash($salt.$this->pass, PASSWORD_DEFAULT);
 
-            $stmtRegister = $this->pdo->prepare("INSERT INTO users (username,password,email,token,created_date) VALUES(:name,:pass,:mail,'$token',:date)");
+            $stmtRegister = $this->pdo->prepare("INSERT INTO users (username,password,salt,email,token,created_date) VALUES(:name,:pass,'$salt',:mail,'$token',:date)");
             //BIND VALUES
             $stmtRegister->bindValue(':name', htmlspecialchars($this->name), PDO::PARAM_STR);
             $stmtRegister->bindValue(':mail', strtolower($this->mail));
@@ -107,7 +108,7 @@ class Account
                     // Get user row if email is exist.
                     $row = $checkMail->fetch(PDO::FETCH_ASSOC);
                     // Check password is ture or not
-                    $match_pass = password_verify($this->pass, $row['password']);
+                    $match_pass = password_verify($row['salt'].$this->pass, $row['password']);
                     
                     if($match_pass){
                       setcookie('auth',$row['username'],time()+3600,'/');
